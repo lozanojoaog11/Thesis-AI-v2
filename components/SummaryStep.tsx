@@ -16,39 +16,41 @@ const SummaryItem: React.FC<{ title: string; children: React.ReactNode; classNam
 );
 
 export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, onNext, onBack }) => {
-  const { verb, object, context, outcome } = thesisData.jtbd;
-  const jtbdSentence = `When ${context}, help me to ${verb} ${object}, so I can ${outcome}.`;
+  const { finalThesis, businessModels, selectedHypotheses, ideationHypotheses } = thesisData;
   
+  if (finalThesis.selectedModelIndex === -1) {
+    return <div>Loading thesis...</div>; // Or some error state
+  }
+
+  const selectedModel = businessModels[finalThesis.selectedModelIndex];
+  const selectedHypothesis = ideationHypotheses[selectedHypotheses[finalThesis.selectedModelIndex]];
+
+  // This is a placeholder for the full product manifesto generation logic
+  // For now, we'll just display the key selected items.
+  const thesisStatement = `The market believes in "${thesisData.conventions[0]?.statement}", but the truth is that [Radical Counter-Hypothesis], which we will materialize through a [Solution Type] that leverages [Unfair Advantage].`;
+
   return (
     <div className="animate-fadeIn w-full max-w-4xl space-y-12">
       <div>
-        <h1 className="text-4xl font-bold font-sans text-brand-light">Your Deconstructed Thesis</h1>
-        <p className="text-lg text-gray-400 mt-2">This is the foundation: a first-principles view of the problem, the customer, and the opportunity.</p>
+        <h1 className="text-4xl font-bold font-sans text-brand-light">Your Final Thesis & Product Manifesto</h1>
+        <p className="text-lg text-gray-400 mt-2">This is the culmination of your strategic analysis. Review the final blueprint before generating the coding prompt.</p>
       </div>
 
       <div className="border border-brand-gray rounded-lg p-8 bg-black/20 divide-y divide-brand-gray">
-        <SummaryItem title="Domain & Core Need">
-          <p>{thesisData.domain}</p>
-          <div className="mt-4 border-l-2 border-brand-blue pl-4 text-lg italic text-gray-300">
-             {thesisData.aiFeedback}
-          </div>
+        <SummaryItem title="Selected Hypothesis">
+          <p className="italic">"{selectedHypothesis.idea}"</p>
         </SummaryItem>
-        <SummaryItem title="Fundamental Truths">
-            <ul className="list-disc list-inside space-y-2">
-                {thesisData.truths.map((truth, i) => <li key={i}>{truth}</li>)}
-            </ul>
+        <SummaryItem title="Justification">
+          <p>{finalThesis.justification}</p>
         </SummaryItem>
-        <SummaryItem title="Challenged Conventions">
-          <ul className="list-disc list-inside space-y-2">
-            {thesisData.conventions.map((c, i) => <li key={i}>{c}</li>)}
-          </ul>
+        <SummaryItem title="The Thesis Statement (Placeholder)">
+          <p className="text-2xl">{thesisStatement}</p>
         </SummaryItem>
-        <SummaryItem title="Job To Be Done">
-            <p className="text-2xl">{jtbdSentence}</p>
+        <SummaryItem title="Core Blueprint">
             <div className="pt-4 space-y-3 text-lg">
-                <p><strong className="text-gray-400">Functional:</strong> {thesisData.jtbdDimensions.functional}</p>
-                <p><strong className="text-gray-400">Emotional:</strong> {thesisData.jtbdDimensions.emotional}</p>
-                <p><strong className="text-gray-400">Social:</strong> {thesisData.jtbdDimensions.social}</p>
+                <p><strong className="text-gray-400">UVP:</strong> {selectedModel.leanCanvas.uniqueValueProposition}</p>
+                <p><strong className="text-gray-400">Unfair Advantage:</strong> {selectedModel.leanCanvas.unfairAdvantage}</p>
+                <p><strong className="text-gray-400">Flywheel:</strong> {selectedModel.flywheel}</p>
             </div>
         </SummaryItem>
       </div>
@@ -58,7 +60,7 @@ export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, onNext, onBack
           &larr; Back
         </Button>
         <Button onClick={onNext}>
-          Generate Manifesto &rarr;
+          Generate Final Prompt &rarr;
         </Button>
       </div>
     </div>

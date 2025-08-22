@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThesisData } from '../types';
+import { Input } from './ui/Input';
 import { TextArea } from './ui/TextArea';
 import { Button } from './ui/Button';
 
@@ -10,58 +11,81 @@ interface Step2Props {
   onBack: () => void;
 }
 
-const challengeTemplates = [
-    (convention: string) => `What if the exact opposite of "${convention}" were true?`,
-    (convention: string) => `What fundamental secret about this market might the belief "${convention}" be hiding?`,
-    (convention: string) => `What would happen if you completely eliminated "${convention}" instead of competing on it?`,
-];
-
 export const Phase1_ConventionsStep: React.FC<Step2Props> = ({ thesisData, updateThesisData, onNext, onBack }) => {
   
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const lines = e.target.value.split('\n').filter(line => line.trim() !== '');
-    updateThesisData('conventions', lines);
+  const handleConventionChange = (index: number, field: 'statement' | 'counterHypothesis', value: string) => {
+    const newConventions = [...thesisData.conventions];
+    newConventions[index] = { ...newConventions[index], [field]: value };
+    updateThesisData('conventions', newConventions);
   };
 
-  const hasConventions = thesisData.conventions && thesisData.conventions.length > 0;
+  const addConvention = () => {
+    const newConventions = [...thesisData.conventions, { statement: '', counterHypothesis: '' }];
+    updateThesisData('conventions', newConventions);
+  };
+
+  const removeConvention = (index: number) => {
+    const newConventions = thesisData.conventions.filter((_, i) => i !== index);
+    updateThesisData('conventions', newConventions);
+  };
+
+  // Initialize with one convention if the list is empty
+  React.useEffect(() => {
+    if (thesisData.conventions.length === 0) {
+      addConvention();
+    }
+  }, []);
+
+  const isComplete = thesisData.conventions.every(c => c.statement && c.counterHypothesis);
 
   return (
     <div className="animate-fadeIn w-full max-w-3xl space-y-12">
       <div>
         <h2 className="text-3xl font-sans text-brand-light font-bold">Phase 1.1: Challenge Conventions</h2>
-         <p className="text-gray-400 font-sans mt-2 mb-8">Identify the fragile assumptions that everyone else accepts as truth.</p>
-        <label className="text-2xl font-sans text-brand-light block mb-2">
-          List 3-5 beliefs or 'best practices' in your domain.
-        </label>
-        <p className="text-gray-400 font-sans mb-4">One belief per line. These are the conventions we will challenge.</p>
-        <TextArea 
-          placeholder={`e.g., All project management tools must have a kanban board.\nTeam collaboration requires constant real-time chat.\nMore features equal a better product.`}
-          value={thesisData.conventions.join('\n')}
-          onChange={handleTextAreaChange}
-        />
+        <p className="text-gray-400 font-sans mt-2 mb-8">Identify fragile assumptions and formulate radical counter-hypotheses.</p>
       </div>
 
-      {hasConventions && (
-        <div className="space-y-8 animate-fadeIn">
-            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">Challenge Cards</h3>
-            {thesisData.conventions.map((convention, index) => (
-                <div key={index} className="p-6 border border-brand-gray rounded-lg bg-black/20 space-y-4">
-                    <p className="text-lg font-mono text-gray-400 italic">Convention: "{convention}"</p>
-                    <ul className="list-disc list-inside space-y-3 pl-2">
-                        {challengeTemplates.map((template, i) => (
-                            <li key={i} className="text-brand-light font-mono text-lg">{template(convention)}</li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
-        </div>
-      )}
+      <div className="space-y-8">
+        {thesisData.conventions.map((convention, index) => (
+          <div key={index} className="p-6 border border-brand-gray rounded-lg bg-black/20 space-y-4 relative">
+            <h3 className="text-xl font-sans font-bold text-brand-light">Convention #{index + 1}</h3>
+            <div>
+              <label className="font-mono text-lg text-gray-400">Convention / "Best Practice":</label>
+              <Input
+                placeholder="e.g., Team collaboration requires constant real-time chat."
+                value={convention.statement}
+                onChange={(e) => handleConventionChange(index, 'statement', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="font-mono text-lg text-gray-400">Radical Counter-Hypothesis:</label>
+              <TextArea
+                placeholder="e.g., Teams need less communication, but with higher density and stricter silence protocols."
+                value={convention.counterHypothesis}
+                onChange={(e) => handleConventionChange(index, 'counterHypothesis', e.target.value)}
+                className="h-24"
+              />
+            </div>
+            {thesisData.conventions.length > 1 && (
+              <Button onClick={() => removeConvention(index)} variant="danger" size="sm" className="absolute top-4 right-4">
+                Remove
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      <div>
+        <Button onClick={addConvention} variant="secondary">
+          + Add Another Convention
+        </Button>
+      </div>
 
       <div className="flex justify-between pt-8">
         <Button onClick={onBack} variant="secondary">
           &larr; Back
         </Button>
-        <Button onClick={onNext} disabled={!hasConventions}>
+        <Button onClick={onNext} disabled={!isComplete}>
           Next Step &rarr;
         </Button>
       </div>
