@@ -1,0 +1,49 @@
+{
+  "phase0": {
+    "mainTitle": "Protocolo Leviatã-Gênesis",
+    "phaseTitle": "Fase 0: Ativação",
+    "description": "Defina os parâmetros fundamentais para a escavação estratégica.",
+    "domainLabel": "1. Domínio de Escavação",
+    "domainPlaceholder": "Ex: Produtividade para times remotos assíncronos no setor de tecnologia",
+    "contextLabel": "2. Contexto do Criador",
+    "contextPlaceholder": "Ex: Empreendedor individual com background em UX/UI, sem capital inicial, com 15 horas semanais para dedicar ao projeto.",
+    "ambitionLabel": "3. Nível de Ambição",
+    "ambitionPlaceholder": "Ex: Criar um Micro-SaaS B2B que atinja $10k de receita mensal em 24 meses.",
+    "surpriseButton": "✨ Me surpreenda: Gere uma Tese",
+    "nextButton": "Iniciar Deconstrução →"
+  },
+  "generating": {
+    "title": "Executando Protocolo LEVIATÃ",
+    "description": "Este processo complexo pode levar até um minuto. A IA está realizando uma análise estratégica profunda para gerar um resultado de alta qualidade.",
+    "phases": [
+      "Fase 1: Desconstruindo a Realidade...",
+      "Analisando Primeiros Princípios & JTBD...",
+      "Fase 2: Mapeando o Ecossistema...",
+      "Analisando PESTEL & Forças de Porter...",
+      "Fase 3: Síntese Criativa...",
+      "Executando SCAMPER & Polinização Cruzada...",
+      "Fase 4: Modelando a Viabilidade do Negócio...",
+      "Desenhando Lean Canvas & Modelo Hook...",
+      "Fase 5: Forjando a Tese Final...",
+      "Manifestando..."
+    ]
+  },
+  "summary": {
+    "title": "Sua Tese Final & Manifesto do Produto",
+    "description": "Esta é a culminação de sua análise estratégica. Revise o blueprint final antes de gerar o prompt de codificação.",
+    "selectedHypothesis": "Hipótese Selecionada",
+    "justification": "Justificativa",
+    "thesisStatement": "A Declaração da Tese (Placeholder)",
+    "coreBlueprint": "Blueprint Principal",
+    "uvp": "PUV",
+    "unfairAdvantage": "Vantagem Injusta",
+    "flywheel": "Flywheel",
+    "backButton": "← Voltar",
+    "nextButton": "Gerar Prompt Final →",
+    "loading": "Carregando tese ou aguardando seleção do modelo...",
+    "error": "Erro: Dados inconsistentes recebidos. Não foi possível exibir o resumo.",
+    "generationFailedError": "A IA falhou em gerar uma tese válida após múltiplas tentativas. Este pode ser um problema intermitente.",
+    "tryAgainButton": "Tentar Novamente",
+    "thesisStatementTemplate": "O mercado acredita em \"{{convention}}\", mas a verdade é que [Contra-Hipótese Radical], que materializaremos através de um [Tipo de Solução] que alavanca uma [Vantagem Injusta]."
+  }
+}

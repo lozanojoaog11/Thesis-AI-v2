@@ -17,6 +17,8 @@ import { Phase4_BusinessModelStep } from './components/Phase4_BusinessModelStep'
 import { Phase5_SelectionStep } from './components/Phase5_SelectionStep';
 import { SummaryStep } from './components/SummaryStep';
 import { ManifestoStep } from './components/ManifestoStep';
+import { LanguageSwitcher } from './components/ui/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 
 const initialThesisData: ThesisData = {
@@ -60,6 +62,7 @@ const initialThesisData: ThesisData = {
 };
 
 const App: React.FC = () => {
+  const { i18n } = useTranslation();
   const [currentStep, setCurrentStep] = useState<AppStep>(AppStep.Phase0_Activation);
   const [thesisData, setThesisData] = useState<ThesisData>(initialThesisData);
   const [error, setError] = useState<string | null>(null);
@@ -120,26 +123,32 @@ const App: React.FC = () => {
   }
 
   const handleGenerateRandom = async () => {
-    console.log("`handleGenerateRandom` triggered.");
+    console.log("`handleGenerateRandom` triggered for language:", i18n.language);
     setCurrentStep(AppStep.Generating);
     setError(null);
     try {
-      const { thesisData, generatedManifesto } = await generateRandomThesis();
-      console.log("Received data from generateRandomThesis:", { thesisData, generatedManifesto });
-      setThesisData(thesisData);
+      const { thesisData: newThesisData, generatedManifesto } = await generateRandomThesis(i18n.language);
+      console.log("Received data from generateRandomThesis:", { newThesisData, generatedManifesto });
+      setThesisData(prevData => ({
+        ...prevData,
+        ...newThesisData,
+      }));
       setGeneratedManifesto(generatedManifesto);
       setCurrentStep(AppStep.Summary);
     } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : "An unknown error occurred during generation.";
       console.error("Error in `handleGenerateRandom`:", e);
-      setError("An error occurred during generation. Please check your API key or try again.");
-      setCurrentStep(AppStep.Phase0_Activation); // Go back to the first step on error
+      setError(errorMessage);
+      // We stay on the current step (Generating) which will then show the error.
+      // Let's transition to Summary step to show the error there.
+      setCurrentStep(AppStep.Summary);
     }
   };
 
   const renderStep = () => {
     switch (currentStep) {
       case AppStep.Phase0_Activation:
-        return <Phase0_ActivationStep thesisData={thesisData} updateThesisData={updateThesisData} onNext={handleNext} onGenerateRandom={handleGenerateRandom} />;
+        return <Phase0_ActivationStep thesisData={thesisData} updateThesisData={updateThesisData} onNext={handleNext} onGenerateRandom={() => handleGenerateRandom()} />;
       case AppStep.Generating:
         return <GeneratingStep />;
       case AppStep.Phase1_Principles:
@@ -165,16 +174,17 @@ const App: React.FC = () => {
       case AppStep.Phase5_Selection:
         return <Phase5_SelectionStep thesisData={thesisData} updateThesisData={updateThesisData} onNext={handleNext} onBack={handleBack} />;
       case AppStep.Summary:
-        return <SummaryStep thesisData={thesisData} onNext={handleNext} onBack={handleBack} />;
+        return <SummaryStep thesisData={thesisData} error={error} onNext={handleNext} onBack={handleBack} onReset={handleReset} />;
        case AppStep.Manifesto:
         return <ManifestoStep thesisData={thesisData} onReset={handleReset} generatedManifesto={generatedManifesto} />;
       default:
-        return <Phase0_ActivationStep thesisData={thesisData} updateThesisData={updateThesisData} onNext={handleNext} onGenerateRandom={handleGenerateRandom} />;
+        return <Phase0_ActivationStep thesisData={thesisData} updateThesisData={updateThesisData} onNext={handleNext} onGenerateRandom={() => handleGenerateRandom()} />;
     }
   };
 
   return (
-    <main className="min-h-screen bg-brand-dark text-brand-light font-sans flex flex-col items-center justify-center p-4 sm:p-8">
+    <main className="relative min-h-screen bg-brand-dark text-brand-light font-sans flex flex-col items-center justify-center p-4 sm:p-8">
+      <LanguageSwitcher />
       <div className="w-full flex items-center justify-center">
         {renderStep()}
       </div>

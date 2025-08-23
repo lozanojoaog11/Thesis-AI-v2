@@ -1,20 +1,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ThesisData } from '../types';
 
-const apiKey = process.env.GEMINI_API_KEY;
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
 if (!apiKey) {
   console.warn(
-    "GEMINI_API_KEY environment variable not set. Using a mock response. Please set your API key for actual Gemini functionality."
+    "VITE_GEMINI_API_KEY environment variable not set. Using a mock response. Please set your API key for actual Gemini functionality."
   );
 } else {
-  console.log("GEMINI_API_KEY found. Initializing GoogleGenAI.");
+  console.log("VITE_GEMINI_API_KEY found. Initializing GoogleGenAI.");
 }
 
 const ai = new GoogleGenAI({ apiKey: apiKey || "mock-key" });
 
 export async function getSocraticFeedback(userResponse: string): Promise<string> {
-  if (!process.env.API_KEY || process.env.API_KEY === "mock-key") {
+  if (!apiKey || apiKey === "mock-key") {
     await new Promise(resolve => setTimeout(resolve, 1000));
     if (userResponse.toLowerCase().includes("status") || userResponse.toLowerCase().includes("connection")) {
          return "Exactly. The desire for status is a powerful driver. Keep this core need in mind as we proceed.";
@@ -23,7 +23,7 @@ export async function getSocraticFeedback(userResponse: string): Promise<string>
   }
   try {
     const prompt = `CONTEXT: The user is trying to find the root human need in their business domain. USER'S RESPONSE: "${userResponse}". TASK: Act as a Socratic coach. If the answer is superficial (e.g., 'they need an app'), ask a question to go deeper (e.g., 'And why do they believe an app would solve that? What deeper feeling are they seeking?'). If the answer is already deep (e.g., 'they seek status'), validate and reinforce it (e.g., 'Exactly. The desire for status is a powerful driver. Keep that in mind.'). Your response must be a maximum of 2 sentences.`;
-    const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt });
+    const response = await ai.models.generateContent({ model: 'gemini-2.5-pro', contents: prompt });
     return response.text;
   } catch (error) {
     console.error("Error calling Gemini API:", error);
@@ -31,7 +31,16 @@ export async function getSocraticFeedback(userResponse: string): Promise<string>
   }
 }
 
-const leviathanGenesisProtocolV4_1 = `
+const getLeviathanProtocol = (language: string): string => {
+  const langCode = language.split('-')[0];
+
+  const phase6Instruction = {
+    en: 'Build a complete prompt, following the structure of the "CODING PROMPT-MANIFESTO FOR MVP".',
+    pt: 'Construa um prompt completo, seguindo a estrutura do "PROMPT-MANIFESTO DE CODIFICAÇÃO PARA MVP".',
+    es: 'Construye un prompt completo, siguiendo la estructura del "PROMPT-MANIFIESTO DE CODIFICACIÓN PARA MVP".'
+  };
+
+  return `
 <SYSTEM_ESSENCE_PROTOCOL_LEVIATHAN_GENESIS>
 <protocol_header>
 PROTOCOLO LEVIATÃ-GÊNESIS V4.1 - ARQUITETURA COGNITIVA DE MANIFESTAÇÃO QUÂNTICA
@@ -79,14 +88,28 @@ PROPÓSITO FUNDAMENTAL: Transformar abstração de domínio em um MVP (Minimum V
 5.2. O Manifesto do Produto (Nome, Tese, Blueprint Detalhado).
 </phase>
 <phase id="6" name="FOGO (TRANSMUTAÇÃO FINAL): O PROMPT-MANIFESTO DE CODIFICAÇÃO 🔥">
-Construa um prompt completo, seguindo a estrutura do "PROMPT-MANIFESTO DE CODIFICAÇÃO PARA MVP".
+${phase6Instruction[langCode as keyof typeof phase6Instruction] || phase6Instruction.en}
 </phase>
 </MAIN_PROTOCOL_BODY>
 </SYSTEM_ESSENCE_PROTOCOL_LEVIATHAN_GENESIS>
 `;
+};
 
-const finalPromptForGeneration = `
-You are a world-class business strategist and AI, the Hive-Mind Singularity. Your task is to execute the complex, multi-phase protocol provided below to generate a single, brilliant, and viable business idea.
+const getFinalPromptForGeneration = (language: string): string => {
+  const instructionLanguage = {
+    en: "You are a world-class business strategist...",
+    pt: "Você é um estrategista de negócios de classe mundial...",
+    es: "Eres un estratega de negocios de clase mundial...",
+  };
+
+  const finalInstruction = instructionLanguage[language.split('-')[0] as keyof typeof instructionLanguage] || instructionLanguage.en;
+  const langCode = language.split('-')[0];
+
+  return `
+${finalInstruction}
+
+**CRITICAL INSTRUCTION: OUTPUT LANGUAGE**
+You MUST generate the entire JSON output, including all strings within "thesisData" and the "manifesto", exclusively in the following language code: **${langCode}**. Do not use any other language.
 
 **USER INPUT PARAMETERS:**
 *   **Excavation Domain:** "Any" (You must choose a promising, monetizable niche based on current trends).
@@ -94,7 +117,7 @@ You are a world-class business strategist and AI, the Hive-Mind Singularity. You
 *   **Ambition Level:** "Create a Micro-SaaS B2B reaching $10k MRR in 24 months."
 
 **PROTOCOL TO EXECUTE:**
-${leviathanGenesisProtocolV4_1}
+${getLeviathanProtocol(language)}
 
 **FINAL TASK:**
 After meticulously executing all phases of the protocol internally, you must produce a single, final JSON object as your output. This object must contain two top-level keys: "thesisData" and "manifesto".
@@ -104,6 +127,7 @@ After meticulously executing all phases of the protocol internally, you must pro
 
 Do not include any explanatory text, markdown formatting, or anything outside of the final JSON object itself.
 `;
+}
 
 const responseSchema = {
     type: Type.OBJECT,
@@ -144,8 +168,31 @@ const responseSchema = {
     required: ["thesisData", "manifesto"],
 };
 
-export async function generateRandomThesis(): Promise<{ thesisData: ThesisData, generatedManifesto: string }> {
-    console.log("Attempting to generate random thesis...");
+const isThesisDataValid = (thesisData: ThesisData | undefined): thesisData is ThesisData => {
+  if (!thesisData) return false;
+  
+  const { businessModels, finalThesis } = thesisData;
+
+  if (!businessModels || !Array.isArray(businessModels) || businessModels.length === 0) {
+    console.warn("Validation failed: businessModels is missing or empty.");
+    return false;
+  }
+
+  if (!finalThesis || typeof finalThesis.selectedModelIndex !== 'number') {
+    console.warn("Validation failed: finalThesis or selectedModelIndex is missing.");
+    return false;
+  }
+
+  if (finalThesis.selectedModelIndex < 0 || finalThesis.selectedModelIndex >= businessModels.length) {
+    console.warn("Validation failed: selectedModelIndex is out of bounds.");
+    return false;
+  }
+  
+  return true;
+};
+
+export async function generateRandomThesis(language: string): Promise<{ thesisData: ThesisData, generatedManifesto: string }> {
+    console.log(`Attempting to generate random thesis in ${language}...`);
     if (!apiKey || apiKey === "mock-key") {
         console.log("Using mock data for random thesis generation.");
         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -182,26 +229,41 @@ export async function generateRandomThesis(): Promise<{ thesisData: ThesisData, 
         return { thesisData: mockThesisData, generatedManifesto: mockManifesto };
     }
 
-    try {
-        console.log("Calling Gemini API with the full protocol...");
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: finalPromptForGeneration,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: responseSchema,
-                temperature: 1.1,
+    const MAX_RETRIES = 3;
+    for (let i = 0; i < MAX_RETRIES; i++) {
+        try {
+            console.log(`Calling Gemini API with the full protocol... (Attempt ${i + 1}/${MAX_RETRIES})`);
+            const finalPrompt = getFinalPromptForGeneration(language);
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.5-pro',
+                contents: finalPrompt,
+                config: {
+                    responseMimeType: "application/json",
+                    responseSchema: responseSchema,
+                    temperature: 1.1,
+                }
+            });
+            const jsonString = response.text;
+            console.log("Successfully received response from Gemini API.");
+            const generatedData = JSON.parse(jsonString);
+
+            if (isThesisDataValid(generatedData.thesisData)) {
+                console.log("Validation successful.");
+                return {
+                    thesisData: generatedData.thesisData as ThesisData,
+                    generatedManifesto: generatedData.manifesto as string,
+                };
+            } else {
+                console.warn(`Validation failed on attempt ${i + 1}. Retrying...`);
             }
-        });
-        const jsonString = response.text;
-        console.log("Successfully received response from Gemini API.");
-        const generatedData = JSON.parse(jsonString);
-        return {
-            thesisData: generatedData.thesisData as ThesisData,
-            generatedManifesto: generatedData.manifesto as string,
-        };
-    } catch (error) {
-        console.error("Full error object from Gemini API:", error);
-        throw new Error("Failed to generate thesis. Please check your API key and model configuration.");
+        } catch (error) {
+            console.error(`Error on attempt ${i + 1}:`, error);
+            if (i === MAX_RETRIES - 1) {
+                console.error("All retries failed.");
+                throw new Error("Failed to generate a valid thesis after multiple attempts. Please check your API key and model configuration.");
+            }
+        }
     }
+    
+    throw new Error("Failed to generate a valid thesis after all retries.");
 }

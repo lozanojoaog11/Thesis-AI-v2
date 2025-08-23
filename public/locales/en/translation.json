@@ -1,0 +1,49 @@
+{
+  "phase0": {
+    "mainTitle": "Leviathan Genesis Protocol",
+    "phaseTitle": "Phase 0: Activation",
+    "description": "Define the foundational parameters for the strategic excavation.",
+    "domainLabel": "1. Domain of Excavation",
+    "domainPlaceholder": "e.g., Productivity for asynchronous remote teams in the tech sector",
+    "contextLabel": "2. Creator Context",
+    "contextPlaceholder": "e.g., Solopreneur with a background in UX/UI, no initial investment capital, with 15 hours per week to dedicate to the project.",
+    "ambitionLabel": "3. Ambition Level",
+    "ambitionPlaceholder": "e.g., Create a Micro-SaaS B2B that reaches $10k MRR in 24 months.",
+    "surpriseButton": "✨ Surprise Me: Generate a Thesis",
+    "nextButton": "Begin Deconstruction →"
+  },
+  "generating": {
+    "title": "Executing LEVIATHAN Protocol",
+    "description": "This complex process can take up to a minute. The AI is performing a deep strategic analysis to generate a high-quality result.",
+    "phases": [
+      "Phase 1: Deconstructing Reality...",
+      "Analyzing First Principles & JTBD...",
+      "Phase 2: Mapping Ecosystem...",
+      "Analyzing PESTEL & Porter's Forces...",
+      "Phase 3: Creative Synthesis...",
+      "Executing SCAMPER & Cross-Pollination...",
+      "Phase 4: Modeling Business Viability...",
+      "Designing Lean Canvas & Hook Model...",
+      "Phase 5: Forging Final Thesis...",
+      "Manifesting..."
+    ]
+  },
+  "summary": {
+    "title": "Your Final Thesis & Product Manifesto",
+    "description": "This is the culmination of your strategic analysis. Review the final blueprint before generating the coding prompt.",
+    "selectedHypothesis": "Selected Hypothesis",
+    "justification": "Justification",
+    "thesisStatement": "The Thesis Statement (Placeholder)",
+    "coreBlueprint": "Core Blueprint",
+    "uvp": "UVP",
+    "unfairAdvantage": "Unfair Advantage",
+    "flywheel": "Flywheel",
+    "backButton": "← Back",
+    "nextButton": "Generate Final Prompt →",
+    "loading": "Loading thesis or waiting for model selection...",
+    "error": "Error: Inconsistent data received. Could not display summary.",
+    "generationFailedError": "The AI failed to generate a valid thesis after multiple attempts. This can be an intermittent issue.",
+    "tryAgainButton": "Try Again",
+    "thesisStatementTemplate": "The market believes in \"{{convention}}\", but the truth is that [Radical Counter-Hypothesis], which we will materialize through a [Solution Type] that leverages [Unfair Advantage]."
+  }
+}

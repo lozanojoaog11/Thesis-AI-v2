@@ -1,0 +1,49 @@
+{
+  "phase0": {
+    "mainTitle": "Protocolo Leviatán-Génesis",
+    "phaseTitle": "Fase 0: Activación",
+    "description": "Defina los parámetros fundamentales para la excavación estratégica.",
+    "domainLabel": "1. Dominio de Excavación",
+    "domainPlaceholder": "Ej: Productividad para equipos remotos asíncronos en el sector tecnológico",
+    "contextLabel": "2. Contexto del Creador",
+    "contextPlaceholder": "Ej: Emprendedor en solitario con experiencia en UX/UI, sin capital inicial, con 15 horas semanales para dedicar al proyecto.",
+    "ambitionLabel": "3. Nivel de Ambición",
+    "ambitionPlaceholder": "Ej: Crear un Micro-SaaS B2B que alcance $10k de ingresos mensuales en 24 meses.",
+    "surpriseButton": "✨ Sorpréndeme: Genera una Tesis",
+    "nextButton": "Iniciar Deconstrucción →"
+  },
+  "generating": {
+    "title": "Ejecutando Protocolo LEVIATÁN",
+    "description": "Este complejo proceso puede tardar hasta un minuto. La IA está realizando un análisis estratégico profundo para generar un resultado de alta calidad.",
+    "phases": [
+      "Fase 1: Deconstruyendo la Realidad...",
+      "Analizando Primeros Principios & JTBD...",
+      "Fase 2: Mapeando el Ecosistema...",
+      "Analizando PESTEL & Fuerzas de Porter...",
+      "Fase 3: Síntesis Creativa...",
+      "Ejecutando SCAMPER & Polinización Cruzada...",
+      "Fase 4: Modelando la Viabilidad del Negocio...",
+      "Diseñando Lean Canvas & Modelo Hook...",
+      "Fase 5: Forjando la Tesis Final...",
+      "Manifestando..."
+    ]
+  },
+  "summary": {
+    "title": "Tu Tesis Final & Manifiesto del Producto",
+    "description": "Esta es la culminación de tu análisis estratégico. Revisa el blueprint final antes de generar el prompt de codificación.",
+    "selectedHypothesis": "Hipótesis Seleccionada",
+    "justification": "Justificación",
+    "thesisStatement": "La Declaración de la Tesis (Placeholder)",
+    "coreBlueprint": "Blueprint Principal",
+    "uvp": "PUV",
+    "unfairAdvantage": "Ventaja Injusta",
+    "flywheel": "Flywheel",
+    "backButton": "← Volver",
+    "nextButton": "Generar Prompt Final →",
+    "loading": "Cargando tesis o esperando selección del modelo...",
+    "error": "Error: Se recibieron datos inconsistentes. No se pudo mostrar el resumen.",
+    "generationFailedError": "La IA no pudo generar una tesis válida después de múltiples intentos. Esto puede ser un problema intermitente.",
+    "tryAgainButton": "Intentar de Nuevo",
+    "thesisStatementTemplate": "El mercado cree en \"{{convention}}\", pero la verdad es que [Contra-Hipótesis Radical], que materializaremos a través de un [Tipo de Solución] que aprovecha una [Ventaja Injusta]."
+  }
+}
