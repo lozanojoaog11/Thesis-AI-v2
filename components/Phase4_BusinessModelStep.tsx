@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ThesisData } from '../types';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
@@ -11,29 +12,36 @@ interface BusinessModelProps {
   onBack: () => void;
 }
 
-const LeanCanvasEditor: React.FC<{ model: any, onChange: (field: string, value: string) => void }> = ({ model, onChange }) => (
+const LeanCanvasEditor: React.FC<{ model: any, onChange: (field: string, value: string) => void }> = ({ model, onChange }) => {
+  const { t } = useTranslation();
+  return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {(Object.keys(model.leanCanvas) as Array<keyof typeof model.leanCanvas>).map(key => (
             <div key={key}>
-                <label className="font-mono text-sm text-gray-400 capitalize">{String(key).replace(/([A-Z])/g, ' $1')}:</label>
+                <label className="font-mono text-sm text-gray-400 capitalize">{t(String(key).replace(/([A-Z])/g, ' $1'))}:</label>
                 <TextArea value={model.leanCanvas[key]} onChange={e => onChange(key, e.target.value)} className="h-20 text-sm" />
             </div>
         ))}
     </div>
-);
+  );
+};
 
-const HookModelEditor: React.FC<{ model: any, onChange: (field: string, value: string) => void }> = ({ model, onChange }) => (
+const HookModelEditor: React.FC<{ model: any, onChange: (field: string, value: string) => void }> = ({ model, onChange }) => {
+  const { t } = useTranslation();
+  return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {(Object.keys(model.hookModel) as Array<keyof typeof model.hookModel>).map(key => (
             <div key={key}>
-                <label className="font-mono text-sm text-gray-400 capitalize">{String(key).replace(/([A-Z])/g, ' $1')}:</label>
+                <label className="font-mono text-sm text-gray-400 capitalize">{t(String(key).replace(/([A-Z])/g, ' $1'))}:</label>
                 <TextArea value={model.hookModel[key]} onChange={e => onChange(key, e.target.value)} className="h-20 text-sm" />
             </div>
         ))}
     </div>
-);
+  );
+};
 
 export const Phase4_BusinessModelStep: React.FC<BusinessModelProps> = ({ thesisData, updateThesisData, onNext, onBack }) => {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Initialize models if they don't exist
@@ -70,14 +78,14 @@ export const Phase4_BusinessModelStep: React.FC<BusinessModelProps> = ({ thesisD
   return (
     <div className="animate-fadeIn w-full max-w-4xl space-y-12">
       <div>
-        <h2 className="text-3xl font-sans text-brand-light font-bold">Phase 4: Business Modeling</h2>
-        <p className="text-gray-400 font-sans mt-2 mb-8">Transform your top 3 hypotheses into concrete, testable business models.</p>
+        <h2 className="text-3xl font-sans text-brand-light font-bold">{t('Phase 4: Business Modeling')}</h2>
+        <p className="text-gray-400 font-sans mt-2 mb-8">{t('Transform your top 3 hypotheses into concrete, testable business models.')}</p>
       </div>
 
       <div className="flex space-x-2 border-b-2 border-brand-gray">
         {selectedHypothesesDetails.map((hyp, index) => (
           <button key={index} onClick={() => setActiveIndex(index)} className={`py-2 px-4 font-mono transition-colors ${activeIndex === index ? 'bg-brand-blue text-white rounded-t-lg' : 'text-gray-400 hover:text-white'}`}>
-            Hypothesis #{index + 1}
+            {t('Hypothesis #{{index}}', { index: index + 1 })}
           </button>
         ))}
       </div>
@@ -86,23 +94,23 @@ export const Phase4_BusinessModelStep: React.FC<BusinessModelProps> = ({ thesisD
         <div className="space-y-8 p-6 bg-black/20 rounded-b-lg">
             <p className="text-lg font-mono text-brand-light italic">"{selectedHypothesesDetails[activeIndex]?.idea}"</p>
             
-            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">Lean Canvas</h3>
+            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">{t('Lean Canvas')}</h3>
             <LeanCanvasEditor model={thesisData.businessModels[activeIndex]} onChange={(field, value) => handleModelChange(activeIndex, 'leanCanvas', field, value)} />
 
-            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">Hook Model</h3>
+            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">{t('Hook Model')}</h3>
             <HookModelEditor model={thesisData.businessModels[activeIndex]} onChange={(field, value) => handleModelChange(activeIndex, 'hookModel', field, value)} />
 
-            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">Flywheel</h3>
-            <TextArea placeholder="Describe the self-reinforcing growth loop..." value={thesisData.businessModels[activeIndex].flywheel} onChange={e => handleFlywheelChange(activeIndex, e.target.value)} className="h-28" />
+            <h3 className="text-xl font-sans font-bold text-brand-light border-b border-brand-gray pb-2">{t('Flywheel')}</h3>
+            <TextArea placeholder={t('Describe the self-reinforcing growth loop...')} value={thesisData.businessModels[activeIndex].flywheel} onChange={e => handleFlywheelChange(activeIndex, e.target.value)} className="h-28" />
         </div>
       )}
 
       <div className="flex justify-between pt-8">
         <Button onClick={onBack} variant="secondary">
-          &larr; Back
+          {t('phase1_conventions.backButton')}
         </Button>
         <Button onClick={onNext} disabled={!isComplete}>
-          Proceed to Final Selection &rarr;
+          {t('Proceed to Final Selection →')}
         </Button>
       </div>
     </div>

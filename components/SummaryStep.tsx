@@ -25,11 +25,10 @@ export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, error, onNext,
   if (error) {
     return (
       <div className="animate-fadeIn w-full max-w-2xl text-center flex flex-col items-center justify-center space-y-6">
-        <h2 className="text-2xl font-bold text-red-400">Generation Failed</h2>
-        <p className="text-lg text-gray-400">{t('summary.generationFailedError')}</p>
+        <h2 className="text-2xl font-bold text-red-400">{t('summary.failureText')}</h2>
         <p className="text-sm text-gray-500 bg-black/20 p-4 rounded-md">{error}</p>
         <Button onClick={onReset} variant="primary">
-          {t('summary.tryAgainButton')}
+          {t('summary.retryButton')}
         </Button>
       </div>
     );
@@ -38,10 +37,9 @@ export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, error, onNext,
   if (finalThesis.selectedModelIndex === -1 || !businessModels || businessModels.length === 0) {
     return (
        <div className="animate-fadeIn w-full max-w-2xl text-center flex flex-col items-center justify-center space-y-6">
-        <h2 className="text-2xl font-bold text-yellow-400">Inconsistent Data</h2>
-        <p className="text-lg text-gray-400">{t('summary.loading')}</p>
+        <h2 className="text-2xl font-bold text-yellow-400">{t('summary.loadingText')}</h2>
         <Button onClick={onReset} variant="secondary">
-           {t('summary.tryAgainButton')}
+           {t('summary.retryButton')}
         </Button>
       </div>
     );
@@ -53,15 +51,8 @@ export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, error, onNext,
 
   // Defensive checks
   if (!selectedModel) {
-    return <div>{t('summary.error')}</div>;
+    return <div>{t('summary.errorText')}</div>;
   }
-
-  // This is a placeholder for the full product manifesto generation logic
-  // For now, we'll just display the key selected items.
-  const conventionStatement = thesisData.conventions && thesisData.conventions.length > 0 
-    ? thesisData.conventions[0].statement 
-    : "[Conventional Belief]";
-  const thesisStatement = t('summary.thesisStatementTemplate', { convention: conventionStatement });
 
   return (
     <div className="animate-fadeIn w-full max-w-4xl space-y-12">
@@ -78,11 +69,11 @@ export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, error, onNext,
           <p>{finalThesis.justification}</p>
         </SummaryItem>
         <SummaryItem title={t('summary.thesisStatement')}>
-          <p className="text-2xl">{thesisStatement}</p>
+          <p className="text-2xl">{finalThesis.productManifesto.thesisStatement || 'N/A'}</p>
         </SummaryItem>
         <SummaryItem title={t('summary.coreBlueprint')}>
             <div className="pt-4 space-y-3 text-lg">
-                <p><strong className="text-gray-400">{t('summary.uvp')}:</strong> {selectedModel?.leanCanvas?.uniqueValueProposition || 'N/A'}</p>
+                <p><strong className="text-gray-400">{t('summary.uniqueValueProp')}:</strong> {selectedModel?.leanCanvas?.uniqueValueProposition || 'N/A'}</p>
                 <p><strong className="text-gray-400">{t('summary.unfairAdvantage')}:</strong> {selectedModel?.leanCanvas?.unfairAdvantage || 'N/A'}</p>
                 <p><strong className="text-gray-400">{t('summary.flywheel')}:</strong> {selectedModel?.flywheel || 'N/A'}</p>
             </div>
@@ -94,7 +85,7 @@ export const SummaryStep: React.FC<SummaryProps> = ({ thesisData, error, onNext,
           {t('summary.backButton')}
         </Button>
         <Button onClick={onNext}>
-          {t('summary.nextButton')}
+          {t('summary.generateButton')}
         </Button>
       </div>
     </div>

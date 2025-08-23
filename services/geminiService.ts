@@ -86,6 +86,7 @@ PROPÓSITO FUNDAMENTAL: Transformar abstração de domínio em um MVP (Minimum V
 <phase id="5" name="FOGO: A TESE FINAL E O BLUEPRINT DA MANIFESTAÇÃO 🔥">
 5.1. Seleção Final e Justificativa.
 5.2. O Manifesto do Produto (Nome, Tese, Blueprint Detalhado).
+5.3. UNICORN SCORE CALCULATION: Based on your complete analysis, assign a score from 0-100 considering: Market Size & Growth (25%), Competitive Moat & Defensibility (25%), Execution Feasibility with Given Resources (25%), Founder-Market Fit & Unique Advantage (25%). Provide the final score as a number.
 </phase>
 <phase id="6" name="FOGO (TRANSMUTAÇÃO FINAL): O PROMPT-MANIFESTO DE CODIFICAÇÃO 🔥">
 ${phase6Instruction[langCode as keyof typeof phase6Instruction] || phase6Instruction.en}
@@ -135,6 +136,10 @@ const responseSchema = {
         thesisData: {
             type: Type.OBJECT,
             properties: {
+                unicornScore: { 
+                  type: Type.NUMBER, 
+                  description: "Score from 0-100 based on market potential (25%), competitive moat (25%), execution feasibility (25%), founder-market fit (25%)" 
+                },
                 excavationDomain: { type: Type.STRING },
                 creatorContext: { type: Type.STRING },
                 ambitionLevel: { type: Type.STRING },
@@ -198,6 +203,7 @@ export async function generateRandomThesis(language: string): Promise<{ thesisDa
         await new Promise(resolve => setTimeout(resolve, 5000));
         // NOTE: This mock data needs to be updated to reflect the full ThesisData structure
         const mockThesisData: ThesisData = {
+            unicornScore: 88,
             excavationDomain: "AI-powered tools for solo legal practitioners",
             creatorContext: "Solopreneur with strong technical skills, no initial investment, 15 hours/week.",
             ambitionLevel: "Create a Micro-SaaS B2B reaching $10k MRR in 24 months.",

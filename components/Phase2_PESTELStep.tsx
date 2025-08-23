@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ThesisData } from '../types';
 import { TextArea } from './ui/TextArea';
 import { Button } from './ui/Button';
@@ -11,6 +12,7 @@ interface PESTELProps {
 }
 
 export const Phase2_PESTELStep: React.FC<PESTELProps> = ({ thesisData, updateThesisData, onNext, onBack }) => {
+  const { t } = useTranslation();
 
   const handleAnalysisChange = (field: keyof ThesisData['pestelAnalysis'], value: string) => {
     updateThesisData('pestelAnalysis', {
@@ -25,18 +27,16 @@ export const Phase2_PESTELStep: React.FC<PESTELProps> = ({ thesisData, updateThe
   return (
     <div className="animate-fadeIn w-full max-w-3xl space-y-12">
       <div>
-        <h2 className="text-3xl font-sans text-brand-light font-bold">Phase 2: Ecosystem Analysis</h2>
-        <p className="text-gray-400 font-sans mt-2 mb-8">Map the macro currents and external forces shaping your domain.</p>
+        <h2 className="text-3xl font-sans text-brand-light font-bold">{t('phase2_pestel.title')}</h2>
+        <p className="text-gray-400 font-sans mt-2 mb-8">{t('phase2_pestel.description')}</p>
       </div>
       
       <div className="space-y-6">
-        <h3 className="text-2xl font-sans text-brand-light font-bold">PESTEL Analysis</h3>
         {(Object.keys(thesisData.pestelAnalysis) as Array<keyof ThesisData['pestelAnalysis']>).map((key) => (
           <div key={key}>
-            <label className="font-mono text-lg text-gray-400 capitalize">{key}:</label>
-            <p className="text-gray-400 font-sans mb-2 text-sm">Identify the key trends for this factor.</p>
+            <label className="font-mono text-lg text-gray-400">{t(`phase2_pestel.${key}Label`)}</label>
             <TextArea 
-              placeholder={`e.g., for Technological: Rise of generative AI, increasing privacy concerns...`}
+              placeholder={t(`phase2_pestel.${key}Placeholder`)}
               value={thesisData.pestelAnalysis[key]} 
               onChange={e => handleAnalysisChange(key, e.target.value)} 
               className="h-24" 
@@ -47,10 +47,10 @@ export const Phase2_PESTELStep: React.FC<PESTELProps> = ({ thesisData, updateThe
 
       <div className="flex justify-between pt-8">
         <Button onClick={onBack} variant="secondary">
-          &larr; Back
+          {t('phase1_conventions.backButton')}
         </Button>
         <Button onClick={onNext} disabled={!isComplete}>
-          Analyze Competitive Forces &rarr;
+          {t('phase1_principles.nextButton')}
         </Button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ThesisData } from '../types';
 import { Button } from './ui/Button';
 
@@ -10,6 +11,7 @@ interface SynthesisProps {
 }
 
 export const Phase3_SynthesisStep: React.FC<SynthesisProps> = ({ thesisData, updateThesisData, onNext, onBack }) => {
+  const { t } = useTranslation();
 
   const handleSelectHypothesis = (index: number) => {
     const newSelection = [...thesisData.selectedHypotheses];
@@ -30,8 +32,8 @@ export const Phase3_SynthesisStep: React.FC<SynthesisProps> = ({ thesisData, upd
   return (
     <div className="animate-fadeIn w-full max-w-3xl space-y-12">
       <div>
-        <h2 className="text-3xl font-sans text-brand-light font-bold">Phase 3: Synthesis & Selection</h2>
-        <p className="text-gray-400 font-sans mt-2 mb-8">Review your generated hypotheses and select the 3 most promising candidates to model as businesses.</p>
+        <h2 className="text-3xl font-sans text-brand-light font-bold">{t('Phase 3: Synthesis & Selection')}</h2>
+        <p className="text-gray-400 font-sans mt-2 mb-8">{t('Review your generated hypotheses and select the 3 most promising candidates to model as businesses.')}</p>
       </div>
 
       <div className="space-y-4">
@@ -52,15 +54,15 @@ export const Phase3_SynthesisStep: React.FC<SynthesisProps> = ({ thesisData, upd
       </div>
       
       <div className="text-center text-gray-400 font-mono">
-        <p>Selected {thesisData.selectedHypotheses.length} of 3</p>
+        <p>{t('Selected {{count}} of 3', { count: thesisData.selectedHypotheses.length })}</p>
       </div>
 
       <div className="flex justify-between pt-8">
         <Button onClick={onBack} variant="secondary">
-          &larr; Back
+          {t('phase1_conventions.backButton')}
         </Button>
         <Button onClick={onNext} disabled={!isComplete}>
-          Model Businesses &rarr;
+          {t('Model Businesses →')}
         </Button>
       </div>
     </div>

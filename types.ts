@@ -32,6 +32,8 @@ export enum AppStep {
 }
 
 export interface ThesisData {
+  unicornScore?: number;
+  
   // FASE 0: ÉTER
   excavationDomain: string;
   creatorContext: string;

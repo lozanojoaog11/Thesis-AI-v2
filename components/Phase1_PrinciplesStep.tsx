@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ThesisData } from '../types';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
@@ -11,16 +12,20 @@ interface Step1Props {
   onNext: () => void;
 }
 
-const LoadingSpinner: React.FC = () => (
+const LoadingSpinner: React.FC = () => {
+  const { t } = useTranslation();
+  return (
     <div className="flex items-center space-x-2">
         <div className="w-2 h-2 rounded-full bg-brand-light animate-pulse" style={{ animationDelay: '0s' }}></div>
         <div className="w-2 h-2 rounded-full bg-brand-light animate-pulse" style={{ animationDelay: '0.2s' }}></div>
         <div className="w-2 h-2 rounded-full bg-brand-light animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-        <span className="text-lg text-gray-400 font-mono">Thinking...</span>
+        <span className="text-lg text-gray-400 font-mono">{t('phase1_principles.loadingText')}</span>
     </div>
-);
+  );
+};
 
 export const Phase1_PrinciplesStep: React.FC<Step1Props> = ({ thesisData, updateThesisData, onNext }) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,15 +56,15 @@ export const Phase1_PrinciplesStep: React.FC<Step1Props> = ({ thesisData, update
   return (
     <div className="animate-fadeIn w-full max-w-3xl space-y-12">
       <div className="space-y-4">
-        <h2 className="text-3xl font-sans text-brand-light font-bold">Phase 1: Deconstruction</h2>
-        <p className="text-gray-400 font-sans">We begin with first principles. Deconstruct the domain to its irreducible atoms.</p>
+        <h2 className="text-3xl font-sans text-brand-light font-bold">{t('phase1_principles.phaseTitle')}</h2>
+        <p className="text-gray-400 font-sans">{t('phase1_principles.phaseDescription')}</p>
       </div>
       
       <div className="space-y-4">
-        <label className="text-2xl font-sans text-brand-light block">1.1 What domain or idea do you want to explore?</label>
+        <label className="text-2xl font-sans text-brand-light block">{t('phase1_principles.label1_1')}</label>
         <Input 
           type="text" 
-          placeholder="e.g., Productivity software for teams" 
+          placeholder={t('phase1_principles.placeholder1_1')}
           value={thesisData.domain}
           onChange={(e) => updateThesisData('domain', e.target.value)}
         />
@@ -67,12 +72,12 @@ export const Phase1_PrinciplesStep: React.FC<Step1Props> = ({ thesisData, update
       
       <div className="space-y-4">
         <label className="text-2xl font-sans text-brand-light block">
-          Behind this, what is the fundamental, timeless human need?
+          {t('phase1_principles.label1_2')}
         </label>
-        <p className="text-gray-400 font-sans">e.g., The need for security, status, connection, growth, self-expression.</p>
+        <p className="text-gray-400 font-sans">{t('phase1_principles.description1_2')}</p>
         <Input 
           type="text" 
-          placeholder="e.g., The need to feel a sense of progress."
+          placeholder={t('phase1_principles.placeholder1_2')}
           value={thesisData.humanNeed}
           onChange={(e) => {
             updateThesisData('humanNeed', e.target.value);
@@ -86,7 +91,7 @@ export const Phase1_PrinciplesStep: React.FC<Step1Props> = ({ thesisData, update
         {!thesisData.aiFeedback && (
           <div className="flex items-center gap-4">
              <Button onClick={handleFeedback} disabled={isLoading || !thesisData.humanNeed}>
-              Get Socratic Feedback
+              {t('phase1_principles.feedbackButton')}
             </Button>
             {isLoading && <LoadingSpinner />}
           </div>
@@ -101,11 +106,11 @@ export const Phase1_PrinciplesStep: React.FC<Step1Props> = ({ thesisData, update
 
        <div className="space-y-4">
         <label className="text-2xl font-sans text-brand-light block">
-          What are 2-3 innegotiable truths about this domain?
+          {t('phase1_principles.label1_3')}
         </label>
-        <p className="text-gray-400 font-sans">Physical, economic, or psychological laws. One per line.</p>
+        <p className="text-gray-400 font-sans">{t('phase1_principles.description1_3')}</p>
         <TextArea 
-          placeholder={`e.g., Attention is a finite resource.\nContext switching destroys productivity.`}
+          placeholder={t('phase1_principles.placeholder1_3')}
           value={thesisData.truths.join('\n')}
           onChange={handleTruthsChange}
           className="h-28"
@@ -115,7 +120,7 @@ export const Phase1_PrinciplesStep: React.FC<Step1Props> = ({ thesisData, update
 
       <div className="flex justify-end pt-8">
         <Button onClick={onNext} disabled={!isComplete}>
-          Next Step &rarr;
+          {t('phase1_principles.nextButton')}
         </Button>
       </div>
     </div>
