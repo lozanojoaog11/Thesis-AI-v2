@@ -96,7 +96,7 @@ ${phase6Instruction[langCode as keyof typeof phase6Instruction] || phase6Instruc
 `;
 };
 
-const getFinalPromptForGeneration = (language: string): string => {
+const getFinalPromptForGeneration = (language: string, excavationDomain: string, creatorContext: string, ambitionLevel: string): string => {
   const instructionLanguage = {
     en: "You are a world-class business strategist...",
     pt: "Você é um estrategista de negócios de classe mundial...",
@@ -113,9 +113,9 @@ ${finalInstruction}
 You MUST generate the entire JSON output, including all strings within "thesisData" and the "manifesto", exclusively in the following language code: **${langCode}**. Do not use any other language.
 
 **USER INPUT PARAMETERS:**
-*   **Excavation Domain:** "Any" (You must choose a promising, monetizable niche based on current trends).
-*   **Creator Context:** "Solopreneur with strong technical skills, no initial investment, 15 hours/week."
-*   **Ambition Level:** "Create a Micro-SaaS B2B reaching $10k MRR in 24 months."
+*   **Excavation Domain:** "${excavationDomain}"
+*   **Creator Context:** "${creatorContext}"
+*   **Ambition Level:** "${ambitionLevel}"
 
 **PROTOCOL TO EXECUTE:**
 ${getLeviathanProtocol(language)}
@@ -196,7 +196,7 @@ const isThesisDataValid = (thesisData: ThesisData | undefined): thesisData is Th
   return true;
 };
 
-export async function generateRandomThesis(language: string): Promise<{ thesisData: ThesisData, generatedManifesto: string }> {
+export async function generateRandomThesis(language: string, excavationDomain: string, creatorContext: string, ambitionLevel: string): Promise<{ thesisData: ThesisData, generatedManifesto: string }> {
     console.log(`Attempting to generate random thesis in ${language}...`);
     if (!apiKey || apiKey === "mock-key") {
         console.log("Using mock data for random thesis generation.");
@@ -239,7 +239,7 @@ export async function generateRandomThesis(language: string): Promise<{ thesisDa
     for (let i = 0; i < MAX_RETRIES; i++) {
         try {
             console.log(`Calling Gemini API with the full protocol... (Attempt ${i + 1}/${MAX_RETRIES})`);
-            const finalPrompt = getFinalPromptForGeneration(language);
+            const finalPrompt = getFinalPromptForGeneration(language, excavationDomain, creatorContext, ambitionLevel);
             const response = await ai.models.generateContent({
                 model: 'gemini-2.5-pro',
                 contents: finalPrompt,

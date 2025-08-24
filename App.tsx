@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { AppStep, ThesisData } from './types';
-import { IntroStep } from './components/IntroStep';
 import { GeneratingStep } from './components/GeneratingStep';
 import { generateRandomThesis } from './services/geminiService';
 import { Phase0_ActivationStep } from './components/Phase0_ActivationStep';
@@ -127,7 +126,12 @@ const App: React.FC = () => {
     setCurrentStep(AppStep.Generating);
     setError(null);
     try {
-      const { thesisData: newThesisData, generatedManifesto } = await generateRandomThesis(i18n.language);
+      const { thesisData: newThesisData, generatedManifesto } = await generateRandomThesis(
+        i18n.language,
+        thesisData.excavationDomain,
+        thesisData.creatorContext,
+        thesisData.ambitionLevel
+      );
       console.log("Received data from generateRandomThesis:", { newThesisData, generatedManifesto });
       setThesisData(prevData => ({
         ...prevData,
@@ -139,8 +143,6 @@ const App: React.FC = () => {
       const errorMessage = e instanceof Error ? e.message : "An unknown error occurred during generation.";
       console.error("Error in `handleGenerateRandom`:", e);
       setError(errorMessage);
-      // We stay on the current step (Generating) which will then show the error.
-      // Let's transition to Summary step to show the error there.
       setCurrentStep(AppStep.Summary);
     }
   };

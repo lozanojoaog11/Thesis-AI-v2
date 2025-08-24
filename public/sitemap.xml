@@ -2,21 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>[YOUR_APP_URL]</loc>
+    <loc>https://unicorn60.com</loc>
     <lastmod>2025-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link 
                rel="alternate"
                hreflang="pt"
-               href="[YOUR_APP_URL]/pt"/>
+               href="https://unicorn60.com/pt"/>
     <xhtml:link 
                rel="alternate"
                hreflang="es"
-               href="[YOUR_APP_URL]/es"/>
+               href="https://unicorn60.com/es"/>
     <xhtml:link 
                rel="alternate"
                hreflang="en"
-               href="[YOUR_APP_URL]"/>
+               href="https://unicorn60.com"/>
   </url>
 </urlset>
